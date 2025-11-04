@@ -1,28 +1,63 @@
 // For those who want the bleeding edge
 buildscript {
     repositories {
-
-        maven { url 'https://jitpack.io' }
-        jcenter()
-        mavenCentral()
+        mavenLocal()
+        maven {url "https://maven.aliyun.com/repository/jcenter"}
+        maven { url "https://maven.aliyun.com/repository/central" }
+        // maven { url "https://maven.aliyun.com/repository/public" }
+        // maven { url "https://maven.aliyun.com/repository/google" }
+        // maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+       // maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
+        
+        maven {
+            name = "forge"
+            // url = "https://maven.minecraftforge.net/"
+            url="https://lss233.littleservice.cn/repositories/minecraft"
+        }
+        
+        //  maven {
+        //     name = "forge"
+        //      url = "https://forgemavenmirror.sinaapp.com/maven"
+        // }
+        
         maven {
             name = "forge"
             url = "https://maven.minecraftforge.net/"
+            //url="https://lss233.littleservice.cn/repositories/minecraft"
+        }
+        maven {
+            name = "forge"
+            url = "https://files.minecraftforge.net/"
         }
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        // maven { url 'https://jitpack.io' }
+        maven { url 'https://jitpack.io' }
+        jcenter()
+        mavenCentral()
+        // jcenter()
+        // mavenCentral()
+        // maven {
+        //     name = "forge"
+        //     // url = "https://maven.minecraftforge.net/"
+        //     url="https://lss233.littleservice.cn/repositories/minecraft"
+        // }
+        // maven {
+        //     name = "sonatype"
+        //     url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        // }
+        
     }
+   
+
     dependencies {
         classpath 'org.ow2.asm:asm:6.0'
-        classpath('com.github.SpongePowered:MixinGradle:dcfaf61'){ // 0.6
-            // Because forgegradle requires 6.0 (not -debug-all) while mixingradle depends on 5.0
-            // and putting mixin right here will place it before forge in the class loader
-            exclude group: 'org.ow2.asm', module: 'asm-debug-all'
-        }
+        classpath fileTree(dir: '/home/user/kaggle/working/useful/MixinGradle-dcfaf61/MixinGradle/dcfaf61', include: '*.jar')
 
-        classpath 'com.github.yunfanjiang:ForgeGradle:FG_2.2_patched-SNAPSHOT'
+        classpath 'com.github.brandonhoughton:ForgeGradle:FG_2.2_patched-SNAPSHOT'
+        //classpath 'net.minecraftforge.gradle:ForgeGradle:FG_2.2_patched-SNAPSHOT'
     }
     configurations {
         compileClasspath {
@@ -36,13 +71,15 @@ buildscript {
     }
 }
 
+
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '1.2.4'
 }
 
 dependencies {
-    implementation 'com.github.yunfanjiang:ForgeGradle:FG_2.2_patched-SNAPSHOT'
+    implementation 'com.github.brandonhoughton:forgegradle:FG_2.2_patched-SNAPSHOT'
+    //implementation 'net.minecraftforge.gradle:forgegradle:FG_2.2_patched-SNAPSHOT'
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -61,7 +98,7 @@ def versionProp = new Properties()
 versionProp.load(propFile.newReader())
 version = versionProp['malmomod.version']
 
-group= "com.microsoft.MalmoMod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group= "com.microsoft.MalmoMod" // https://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MalmoMod"
 
 
@@ -87,10 +124,39 @@ runClient {
 }
 
 repositories {
+    mavenLocal()
+    maven {url "https://maven.aliyun.com/repository/jcenter"}
+    maven { url "https://maven.aliyun.com/repository/central" }
+    // maven { url "https://maven.aliyun.com/repository/public" }
+    // maven { url "https://maven.aliyun.com/repository/google" }
+    // maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+    // maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
+    maven {
+            name = "forge"
+            url = "https://maven.minecraftforge.net/"
+            //url = "https://forgemavenmirror.sinaapp.com/maven"
+            //url="https://lss233.littleservice.cn/repositories/minecraft"
+        }
+    maven {
+            name = "forge"
+            // url = "https://maven.minecraftforge.net/"
+            url="https://lss233.littleservice.cn/repositories/minecraft"
+        }
+     maven {
+            name = "forge"
+            // url = "https://maven.minecraftforge.net/"
+             url = "https://files.minecraftforge.net/"
+        }
+            
     maven {
         name = "SpongePowered Repo"
         url = "https://repo.spongepowered.org/maven/"
     }
+    // maven {
+    //         name = "forge"
+    //         // url = "https://maven.minecraftforge.net/"
+    //         url="https://lss233.littleservice.cn/repositories/minecraft"
+    //     }
     maven { url 'https://jitpack.io' }
 }
 
@@ -306,7 +372,7 @@ task jaxb() {
     description 'Generate source files for our XML schemas using JAXB'
 
     // Create an index file listing all the schemas:
-    def schemaIndexFile = new File("$projectDir/src/main/resources/schemas.index")
+    def schemaIndexFile = new File('src/main/resources/schemas.index')
     def contents = ""
     def tree = copySchemas.source
     tree.visit { fileDetails ->
